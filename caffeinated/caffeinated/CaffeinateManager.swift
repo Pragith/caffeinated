@@ -3,14 +3,15 @@ import Foundation
 final class CaffeinateManager {
     private(set) var isActive = false
     private var process: Process?
+    private var timer: Timer?
     var onStateChange: (() -> Void)?
 
     func toggle() {
         isActive ? stop() : start()
     }
 
-    func start() {
-        guard !isActive else { return }
+    func start(duration: TimeInterval? = nil) {
+        stop() // Ensure clean start
         
         let newProcess = Process()
         newProcess.executableURL = URL(fileURLWithPath: "/usr/bin/caffeinate")
@@ -18,9 +19,7 @@ final class CaffeinateManager {
         
         newProcess.terminationHandler = { [weak self] _ in
             DispatchQueue.main.async {
-                self?.isActive = false
-                self?.process = nil
-                self?.onStateChange?()
+                self?.cleanup()
             }
         }
         
@@ -28,6 +27,13 @@ final class CaffeinateManager {
             try newProcess.run()
             self.process = newProcess
             self.isActive = true
+            
+            if let duration = duration {
+                timer = Timer.scheduledTimer(withTimeInterval: duration, repeats: false) { [weak self] _ in
+                    self?.stop()
+                }
+            }
+            
             self.onStateChange?()
         } catch {
             self.isActive = false
@@ -39,7 +45,13 @@ final class CaffeinateManager {
         if process?.isRunning == true {
             process?.terminate()
         }
+        cleanup()
+    }
+    
+    private func cleanup() {
         process = nil
+        timer?.invalidate()
+        timer = nil
         isActive = false
         onStateChange?()
     }

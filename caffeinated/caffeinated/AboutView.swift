@@ -16,7 +16,7 @@ struct AboutView: View {
             VStack(spacing: 5) {
                 Text("Caffeinate-d")
                     .font(.headline)
-                Text("Version 0.1.3")
+                Text("Version 0.1.4")
                     .font(.subheadline)
                     .foregroundColor(.secondary)
             }

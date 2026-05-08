@@ -1,5 +1,6 @@
 import Cocoa
 import SwiftUI
+import ServiceManagement
 
 final class AppDelegate: NSObject, NSApplicationDelegate {
     private var statusItem: NSStatusItem?
@@ -7,7 +8,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var aboutWindow: NSWindow?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
-        statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
+        statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
         
         if let button = statusItem?.button {
             button.target = self
@@ -32,17 +33,78 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     private func updateUI() {
         guard let button = statusItem?.button else { return }
-        button.title = manager.isActive ? "☕" : "🍵"
+        button.image = NSImage(named: manager.isActive ? "TrayIconOn" : "TrayIconOff")
         button.toolTip = "Caffeinate-d: \(manager.isActive ? "ON" : "OFF")"
     }
 
     private func showMenu() {
         let menu = NSMenu()
+        
+        // --- Status ---
+        let statusItem = NSMenuItem(title: manager.isActive ? "Active (Indefinite)" : "Caffeinate-d is Off", action: nil, keyEquivalent: "")
+        statusItem.isEnabled = false
+        menu.addItem(statusItem)
+        menu.addItem(NSMenuItem.separator())
+
+        // --- Intervals ---
+        let intervals = NSMenuItem(title: "Activate for...", action: nil, keyEquivalent: "")
+        let subMenu = NSMenu()
+        
+        let durations: [(String, TimeInterval)] = [
+            ("1 Minute", 60),
+            ("2 Minutes", 120),
+            ("5 Minutes", 300),
+            ("10 Minutes", 600)
+        ]
+        
+        for (label, time) in durations {
+            let item = NSMenuItem(title: label, action: #selector(startWithDuration(_:)), keyEquivalent: "")
+            item.representedObject = time
+            subMenu.addItem(item)
+        }
+        intervals.submenu = subMenu
+        menu.addItem(intervals)
+        
+        menu.addItem(NSMenuItem.separator())
+
+        // --- Preferences ---
+        let autostart = NSMenuItem(title: "Launch at Login", action: #selector(toggleAutostart(_:)), keyEquivalent: "")
+        autostart.state = isLaunchAtLoginEnabled ? .on : .off
+        menu.addItem(autostart)
+        
         menu.addItem(NSMenuItem(title: "About", action: #selector(showAbout), keyEquivalent: ""))
         menu.addItem(NSMenuItem.separator())
         menu.addItem(NSMenuItem(title: "Exit", action: #selector(terminate), keyEquivalent: "q"))
         
         statusItem?.popUpMenu(menu)
+    }
+
+    @objc private func startWithDuration(_ sender: NSMenuItem) {
+        if let duration = sender.representedObject as? TimeInterval {
+            manager.start(duration: duration)
+        }
+    }
+
+    @objc private func toggleAutostart(_ sender: NSMenuItem) {
+        let newState = !isLaunchAtLoginEnabled
+        setLaunchAtLogin(enabled: newState)
+        sender.state = newState ? .on : .off
+    }
+
+    private var isLaunchAtLoginEnabled: Bool {
+        return SMAppService.mainApp.status == .enabled
+    }
+
+    private func setLaunchAtLogin(enabled: Bool) {
+        do {
+            if enabled {
+                try SMAppService.mainApp.register()
+            } else {
+                try SMAppService.mainApp.unregister()
+            }
+        } catch {
+            print("Failed to update launch at login status: \(error)")
+        }
     }
 
     @objc private func showAbout() {
