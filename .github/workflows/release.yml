@@ -1,0 +1,37 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    name: Build and Release
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set Version
+        id: version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+      - name: Build App
+        run: |
+          cd caffeinated
+          xcodebuild -scheme caffeinated -configuration Release -derivedDataPath ./build build
+          mkdir -p ./release
+          cp -R ./build/Build/Products/Release/caffeinated.app ./release/
+
+      - name: Create DMG
+        run: |
+          hdiutil create -volname "Caffeinated" -srcfolder caffeinated/release -ov -format UDZO Caffeinated_${{ steps.version.outputs.VERSION }}.dmg
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: Caffeinated_${{ steps.version.outputs.VERSION }}.dmg
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

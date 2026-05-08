@@ -1,0 +1,19 @@
+# Xcode Build Results
+build/
+DerivedData/
+GeneratedAssetSymbols.swift
+
+# User-specific Files (Fluff)
+xcuserdata/
+*.xcuserdata/
+*.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/
+*.xcscmblueprint
+*.hmap
+
+# macOS System Files
+.DS_Store
+
+# Release Artifacts
+release/
+*.dmg
