@@ -33,7 +33,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     private func updateUI() {
         guard let button = statusItem?.button else { return }
-        button.image = NSImage(named: manager.isActive ? "TrayIconOn" : "TrayIconOff")
+        button.title = manager.isActive ? "☕" : "🍵"
         button.toolTip = "Caffeinate-d: \(manager.isActive ? "ON" : "OFF")"
     }
 
@@ -41,9 +41,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let menu = NSMenu()
         
         // --- Status ---
-        let statusItem = NSMenuItem(title: manager.isActive ? "Active (Indefinite)" : "Caffeinate-d is Off", action: nil, keyEquivalent: "")
-        statusItem.isEnabled = false
-        menu.addItem(statusItem)
+        let statusLabel = NSMenuItem(title: manager.isActive ? "Active (Indefinite)" : "Caffeinate-d is Off", action: nil, keyEquivalent: "")
+        statusLabel.isEnabled = false
+        menu.addItem(statusLabel)
         menu.addItem(NSMenuItem.separator())
 
         // --- Intervals ---
@@ -76,7 +76,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         menu.addItem(NSMenuItem.separator())
         menu.addItem(NSMenuItem(title: "Exit", action: #selector(terminate), keyEquivalent: "q"))
         
-        statusItem?.popUpMenu(menu)
+        if let button = statusItem?.button {
+            menu.popUp(positioning: nil, at: NSPoint(x: 0, y: button.bounds.height), in: button)
+        }
     }
 
     @objc private func startWithDuration(_ sender: NSMenuItem) {
