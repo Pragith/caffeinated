@@ -8,7 +8,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var aboutWindow: NSWindow?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
-        checkActualLidSleepStatus()
+        // Commented out to ensure App Store sandboxing compliance. Will address later.
+        // checkActualLidSleepStatus()
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
         
         if let button = statusItem?.button {
@@ -78,9 +79,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         autostart.state = isLaunchAtLoginEnabled ? .on : .off
         menu.addItem(autostart)
         
+        // Commented out to ensure App Store sandboxing compliance. Will address later.
+        /*
         let lidSleep = NSMenuItem(title: "Prevent Lid Sleep (Requires Password)", action: #selector(toggleLidSleep(_:)), keyEquivalent: "")
         lidSleep.state = isLidSleepDisabled ? .on : .off
         menu.addItem(lidSleep)
+        */
         
         menu.addItem(NSMenuItem.separator())
         
@@ -147,6 +151,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
+    // The following features are commented out to ensure App Store sandboxing compliance.
+    // Sandboxed applications are strictly forbidden from executing administrative shell scripts or calling pmset disablesleep.
+    // We will address this later (e.g., via a separate, non-sandboxed companion/helper tool).
+    /*
     private var isLidSleepDisabled: Bool {
         get {
             UserDefaults.standard.bool(forKey: "isLidSleepDisabled")
@@ -199,6 +207,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             sender.state = isLidSleepDisabled ? .on : .off
         }
     }
+    */
 
     @objc private func terminate() {
         manager.stop()
