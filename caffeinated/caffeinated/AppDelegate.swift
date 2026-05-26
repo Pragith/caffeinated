@@ -8,6 +8,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var aboutWindow: NSWindow?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
+        checkActualLidSleepStatus()
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
         
         if let button = statusItem?.button {
@@ -33,7 +34,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     private func updateUI() {
         guard let button = statusItem?.button else { return }
-        button.title = manager.isActive ? "☕" : "🍵"
+        let symbolName = manager.isActive ? "cup.and.saucer.fill" : "cup.and.saucer"
+        if let image = NSImage(systemSymbolName: symbolName, accessibilityDescription: "Caffeinate-d") {
+            image.isTemplate = true
+            button.image = image
+        }
+        button.title = ""
         button.toolTip = "Caffeinate-d: \(manager.isActive ? "ON" : "OFF")"
     }
 
@@ -72,7 +78,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         autostart.state = isLaunchAtLoginEnabled ? .on : .off
         menu.addItem(autostart)
         
+        let lidSleep = NSMenuItem(title: "Prevent Lid Sleep (Requires Password)", action: #selector(toggleLidSleep(_:)), keyEquivalent: "")
+        lidSleep.state = isLidSleepDisabled ? .on : .off
+        menu.addItem(lidSleep)
+        
+        menu.addItem(NSMenuItem.separator())
+        
         menu.addItem(NSMenuItem(title: "About", action: #selector(showAbout), keyEquivalent: ""))
+        menu.addItem(NSMenuItem(title: "Buy me a coffee...", action: #selector(buyMeACoffee), keyEquivalent: ""))
         menu.addItem(NSMenuItem.separator())
         menu.addItem(NSMenuItem(title: "Exit", action: #selector(terminate), keyEquivalent: "q"))
         
@@ -126,6 +139,65 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         
         aboutWindow?.makeKeyAndOrderFront(nil)
         NSApp.activate(ignoringOtherApps: true)
+    }
+
+    @objc private func buyMeACoffee() {
+        if let url = URL(string: "https://buymeacoffee.com/pragith") {
+            NSWorkspace.shared.open(url)
+        }
+    }
+
+    private var isLidSleepDisabled: Bool {
+        get {
+            UserDefaults.standard.bool(forKey: "isLidSleepDisabled")
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: "isLidSleepDisabled")
+        }
+    }
+
+    private func checkActualLidSleepStatus() {
+        let process = Process()
+        process.executableURL = URL(fileURLWithPath: "/usr/bin/pmset")
+        process.arguments = ["-g"]
+        let pipe = Pipe()
+        process.standardOutput = pipe
+        do {
+            try process.run()
+            process.waitUntilExit()
+            let data = pipe.fileHandleForReading.readDataToEndOfFile()
+            if let output = String(data: data, encoding: .utf8) {
+                let isDisabled = output.contains("disablesleep") && (output.contains("disablesleep\t1") || output.contains("disablesleep 1"))
+                UserDefaults.standard.set(isDisabled, forKey: "isLidSleepDisabled")
+            }
+        } catch {
+            print("Failed to read pmset status: \(error)")
+        }
+    }
+
+    private func setLidSleepDisabled(_ disabled: Bool) -> Bool {
+        let value = disabled ? 1 : 0
+        let script = "do shell script \"pmset -a disablesleep \(value)\" with administrator privileges"
+        let appleScript = NSAppleScript(source: script)
+        var error: NSDictionary?
+        let result = appleScript?.executeAndReturnError(&error)
+        
+        if let error = error {
+            print("AppleScript error: \(error)")
+            return false
+        }
+        return result != nil
+    }
+
+    @objc private func toggleLidSleep(_ sender: NSMenuItem) {
+        let targetState = !isLidSleepDisabled
+        if setLidSleepDisabled(targetState) {
+            isLidSleepDisabled = targetState
+            sender.state = targetState ? .on : .off
+        } else {
+            // User canceled or authentication failed, keep the old state
+            sender.state = isLidSleepDisabled ? .on : .off
+        }
     }
 
     @objc private func terminate() {

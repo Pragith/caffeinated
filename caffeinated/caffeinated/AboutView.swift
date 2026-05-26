@@ -30,19 +30,6 @@ struct AboutView: View {
             Text("© 2026 Pragith AI Inc.")
                 .font(.caption2)
                 .foregroundColor(.secondary)
-            
-            Button(action: {
-                if let url = URL(string: "https://buymeacoffee.com/pragith") {
-                    NSWorkspace.shared.open(url)
-                }
-            }) {
-                Image("BMCButton")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(height: 40)
-            }
-            .buttonStyle(.plain)
-            .padding(.top, 10)
         }
         .padding()
         .frame(width: 300)

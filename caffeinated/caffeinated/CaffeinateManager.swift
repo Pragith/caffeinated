@@ -15,7 +15,7 @@ final class CaffeinateManager {
         
         let newProcess = Process()
         newProcess.executableURL = URL(fileURLWithPath: "/usr/bin/caffeinate")
-        newProcess.arguments = ["-d"]
+        newProcess.arguments = ["-d", "-i", "-m"]
         
         newProcess.terminationHandler = { [weak self] _ in
             DispatchQueue.main.async {
