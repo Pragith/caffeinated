@@ -9,7 +9,7 @@ This guide outlines the technical and administrative steps required to publish C
 - [ ] **Iconography**: Needs high-res icons (1024x1024 down to 16x16) in an `.appiconset`.
 
 ## 2. Store Assets
-- [ ] **Screenshots**: Capture final screenshots of the app's actual menu bar menu and About window, then add them to App Store Connect.
+- [x] **Mac screenshot**: The actual awake menu is captured at `docs/screenshots/caffeinated_app_store_awake_menu.png` (1280×800, opaque PNG) and uploaded to the 1.0 App Store Connect listing. Add further states such as a timed session or About window if desired.
 - [x] **Icon**: AppIcon asset catalog includes a 1024x1024 icon.
 - [x] **Privacy Policy**: `https://pragith.net/privacy` is live.
 
