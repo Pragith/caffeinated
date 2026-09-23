@@ -16,6 +16,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             button.target = self
             button.action = #selector(handleStatusItemClick(_:))
             button.sendAction(on: [.leftMouseUp, .rightMouseUp])
+            button.setAccessibilityLabel("Caffeinate-d")
             updateUI()
         }
         
@@ -41,6 +42,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             button.image = image
         }
         button.title = ""
+        button.setAccessibilityValue(manager.isActive ? "On" : "Off")
         button.toolTip = "Caffeinate-d: \(manager.isActive ? "ON" : "OFF")"
     }
 
@@ -48,7 +50,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let menu = NSMenu()
         
         // --- Status ---
-        let statusLabel = NSMenuItem(title: manager.isActive ? "Active (Indefinite)" : "Caffeinate-d is Off", action: nil, keyEquivalent: "")
+        let statusLabel = NSMenuItem(title: manager.isActive ? "Caffeinate-d is On" : "Caffeinate-d is Off", action: nil, keyEquivalent: "")
         statusLabel.isEnabled = false
         menu.addItem(statusLabel)
         menu.addItem(NSMenuItem.separator())

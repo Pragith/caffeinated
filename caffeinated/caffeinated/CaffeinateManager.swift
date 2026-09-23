@@ -2,7 +2,7 @@ import Foundation
 
 final class CaffeinateManager {
     private(set) var isActive = false
-    private var process: Process?
+    private var activity: NSObjectProtocol?
     private var timer: Timer?
     var onStateChange: (() -> Void)?
 
@@ -12,51 +12,35 @@ final class CaffeinateManager {
 
     func start(duration: TimeInterval? = nil) {
         stop() // Ensure clean start
-        
-        let newProcess = Process()
-        newProcess.executableURL = URL(fileURLWithPath: "/usr/bin/caffeinate")
-        newProcess.arguments = ["-d", "-i", "-m"]
-        
-        newProcess.terminationHandler = { [weak self] _ in
-            DispatchQueue.main.async {
-                self?.cleanup()
+        activity = ProcessInfo.processInfo.beginActivity(
+            options: [.idleDisplaySleepDisabled, .idleSystemSleepDisabled],
+            reason: "Caffeinate-d is keeping the Mac awake"
+        )
+        isActive = true
+
+        if let duration {
+            timer = Timer.scheduledTimer(withTimeInterval: duration, repeats: false) { [weak self] _ in
+                self?.stop()
             }
         }
-        
-        do {
-            try newProcess.run()
-            self.process = newProcess
-            self.isActive = true
-            
-            if let duration = duration {
-                timer = Timer.scheduledTimer(withTimeInterval: duration, repeats: false) { [weak self] _ in
-                    self?.stop()
-                }
-            }
-            
-            self.onStateChange?()
-        } catch {
-            self.isActive = false
-            self.onStateChange?()
-        }
+
+        onStateChange?()
     }
 
     func stop() {
-        if process?.isRunning == true {
-            process?.terminate()
+        guard isActive || activity != nil else {
+            timer?.invalidate()
+            timer = nil
+            return
         }
-        cleanup()
-    }
-    
-    private func cleanup() {
-        process = nil
+
+        if let activity {
+            ProcessInfo.processInfo.endActivity(activity)
+        }
+        activity = nil
         timer?.invalidate()
         timer = nil
         isActive = false
         onStateChange?()
-    }
-    
-    deinit {
-        stop()
     }
 }

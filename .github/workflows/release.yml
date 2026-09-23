@@ -15,21 +15,24 @@ jobs:
 
       - name: Set Version
         id: version
-        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+        run: |
+          VERSION="$(cat VERSION)"
+          TAG_VERSION="${GITHUB_REF#refs/tags/v}"
+          test "$TAG_VERSION" = "$VERSION"
+          echo "VERSION=$VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Build App
         run: |
-          cd caffeinated
-          xcodebuild -scheme caffeinated -configuration Release -derivedDataPath ./build build
-          mkdir -p ./release
-          cp -R ./build/Build/Products/Release/caffeinated.app ./release/
+          xcodebuild -project caffeinated/caffeinated.xcodeproj -scheme caffeinated -configuration Release -sdk macosx -derivedDataPath caffeinated/build CODE_SIGNING_ALLOWED=NO build
+          mkdir -p caffeinated/release
+          cp -R caffeinated/build/Build/Products/Release/caffeinate-d.app caffeinated/release/
 
       - name: Create DMG
         run: |
           hdiutil create -volname "Caffeinated" -srcfolder caffeinated/release -ov -format UDZO Caffeinated_${{ steps.version.outputs.VERSION }}.dmg
 
       - name: Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           files: Caffeinated_${{ steps.version.outputs.VERSION }}.dmg
           generate_release_notes: true

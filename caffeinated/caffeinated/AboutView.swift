@@ -8,6 +8,7 @@ struct AboutView: View {
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 80, height: 80)
+                    .accessibilityLabel("Caffeinate-d app icon")
             } else {
                 Text("☕")
                     .font(.system(size: 60))
@@ -16,9 +17,9 @@ struct AboutView: View {
             VStack(spacing: 5) {
                 Text("Caffeinate-d")
                     .font(.headline)
-                Text("Version 0.2.0")
+                Text("Version \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0")")
                     .font(.subheadline)
-                    .foregroundColor(.secondary)
+                    .foregroundStyle(.secondary)
             }
             
             VStack(spacing: 5) {
@@ -29,7 +30,7 @@ struct AboutView: View {
             
             Text("© 2026 Pragith AI Inc.")
                 .font(.caption2)
-                .foregroundColor(.secondary)
+                .foregroundStyle(.secondary)
         }
         .padding()
         .frame(width: 300)

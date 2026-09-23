@@ -1,14 +1,14 @@
 # Caffeinate-d 🍵☕️
 
-A minimalist macOS menu bar application to keep your Mac awake.
+A minimalist macOS menu bar application to keep your Mac's display and system awake.
 
-[![Release](https://img.shields.io/github/v/release/pragithp/caffeinated)](https://github.com/pragithp/caffeinated/releases)
+[![Release](https://img.shields.io/github/v/release/Pragith/caffeinated)](https://github.com/Pragith/caffeinated/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Features
 
 - **Emoji Toggle**: 🍵 (Resting) / ☕ (Awake).
-- **One-Click Logic**: Toggles `caffeinate -d` in the background.
+- **Native Power Management**: Uses macOS activity assertions to prevent display and idle system sleep while active.
 - **Minimalist Design**: No Dock icon, no windows, just the menu bar.
 - **Professional About Window**: Easy access to version info and donation links.
 
@@ -21,13 +21,17 @@ A minimalist macOS menu bar application to keep your Mac awake.
 ## Usage
 
 - **Left Click**: Toggles state.
-- **Right Click**: Opens menu (About / Exit).
+- **Right Click**: Opens the menu for timed sessions, Launch at Login, About, and Exit.
+
+Timed sessions are available for 1, 2, 5, and 10 minutes. The app does not prevent sleep when the Mac's lid is closed.
 
 ## Development
 
 ```bash
-xcodebuild -scheme caffeinated -configuration Release build
+xcodebuild -project caffeinated/caffeinated.xcodeproj -scheme caffeinated -configuration Release -sdk macosx27.0 build
 ```
+
+For Mac App Store distribution, see [the submission guide](docs/SUBMISSION_GUIDE.md) and use `scripts/release_macos_app_store.sh`. The App Store Connect API key stays outside the repository.
 
 ## Contributing
 

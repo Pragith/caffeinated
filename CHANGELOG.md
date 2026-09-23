@@ -16,6 +16,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - Removed the large "Buy me a coffee" image button from the About window.
 
+## [1.0] - 2026-09-23
+
+### Added
+- Replaced the `caffeinate` subprocess with native `ProcessInfo` activity assertions for display and system idle sleep prevention, compatible with App Sandbox distribution.
+- Added VoiceOver labels and values for the menu bar control.
+- Read the app version from its bundle metadata and set the release copyright in the generated Info.plist.
+
+### Changed
+- Aligned the release with the existing App Store Connect macOS version record and incremented the build number.
+
 ## [0.1.4] - 2026-05-08
 
 ### Added
