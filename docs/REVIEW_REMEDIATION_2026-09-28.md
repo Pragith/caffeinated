@@ -1,5 +1,7 @@
 # App Review remediation and build 1.0 (2) delivery
 
+**Follow-up:** Build 1.0 (4) and the corrected listing were resubmitted on 2026-09-28. See [resubmission evidence](RESUBMISSION_2026-09-28.md). The remaining-work section below records the state at the time of build 2 delivery.
+
 Date: 2026-09-28
 
 App: Caffeinate-d (`net.pragith.caffeinated`)

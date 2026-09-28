@@ -17,6 +17,7 @@ xcuserdata/
 # Release Artifacts
 release/
 *.dmg
+__pycache__/
 
 # Local agent configuration and incomplete screenshot captures
 .antigravitycli/

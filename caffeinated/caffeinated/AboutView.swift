@@ -24,10 +24,12 @@ struct AboutView: View {
             }
             
             VStack(spacing: 5) {
-                Text("Developed by Pragith Prakash")
+                Text("Developed by")
+                Link("Pragith Prakash", destination: URL(string: "https://pragith.net/projects/caffeinate-d?utm_source=caffeinate-d&utm_medium=app&utm_campaign=about")!)
+                    .accessibilityHint("Opens the Caffeinate-d project page in your browser")
             }
             
-            Text("© 2026 Pragith AI Inc.")
+            Text("© 2026 Pragith Prakash")
                 .font(.caption2)
                 .foregroundStyle(.secondary)
         }
