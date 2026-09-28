@@ -8,8 +8,8 @@ This is the first Mac App Store release candidate.
 - **Minimalist Tray Integration**: A one-click menu bar control for system awake assertions.
 - **Native Status Indicator**: SF Symbols show whether the awake assertion is active.
 - **Background Only**: Runs with `LSUIElement`, keeping your Dock clutter-free.
-- **High Performance**: Built with vanilla Swift/SwiftUI for zero impact on system resources.
-- **About Window**: Integrated links for documentation and developer support.
+- **Lightweight**: Built with Swift and SwiftUI.
+- **About Window**: Shows the app version and developer information.
 
 ### 🛠 Technical Specifications
 - **macOS Version**: 26.4+ (current Xcode project deployment target)
@@ -17,12 +17,8 @@ This is the first Mac App Store release candidate.
 - **Architecture**: Apple Silicon and Intel, as configured by the Xcode target
 
 ### 🚀 Installation
-1. Download the latest DMG from GitHub Releases.
-2. Drag the app to your `/Applications` folder.
-3. Launch and enjoy the focus.
-
-### ☕️ Support
-If you find this utility useful, consider [Buying me a coffee](https://buymeacoffee.com/pragith).
+1. Install the app from the App Store when the new build is approved.
+2. Launch it and use the menu bar control.
 
 ---
 **Full Changelog**: https://github.com/Pragith/caffeinated/commits/v1.0

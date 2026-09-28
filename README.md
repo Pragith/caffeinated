@@ -7,10 +7,10 @@ A minimalist macOS menu bar application to keep your Mac's display and system aw
 
 ## Features
 
-- **Emoji Toggle**: 🍵 (Resting) / ☕ (Awake).
+- **Menu Bar Toggle**: A cup icon shows whether sleep prevention is active.
 - **Native Power Management**: Uses macOS activity assertions to prevent display and idle system sleep while active.
-- **Minimalist Design**: No Dock icon, no windows, just the menu bar.
-- **Professional About Window**: Easy access to version info and donation links.
+- **Minimalist Design**: No Dock icon; controls live in the menu bar.
+- **About Window**: Shows the app version and developer information.
 
 ## Installation
 
@@ -36,10 +36,6 @@ For Mac App Store distribution, see [the submission guide](docs/SUBMISSION_GUIDE
 ## Contributing
 
 Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details.
-
-## Donation
-
-Support development: [pragith.net/donate](https://buymeacoffee.com/pragith)
 
 ## License
 

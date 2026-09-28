@@ -91,7 +91,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         menu.addItem(NSMenuItem.separator())
         
         menu.addItem(NSMenuItem(title: "About", action: #selector(showAbout), keyEquivalent: ""))
-        menu.addItem(NSMenuItem(title: "Buy me a coffee...", action: #selector(buyMeACoffee), keyEquivalent: ""))
         menu.addItem(NSMenuItem.separator())
         menu.addItem(NSMenuItem(title: "Exit", action: #selector(terminate), keyEquivalent: "q"))
         
@@ -145,12 +144,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         
         aboutWindow?.makeKeyAndOrderFront(nil)
         NSApp.activate(ignoringOtherApps: true)
-    }
-
-    @objc private func buyMeACoffee() {
-        if let url = URL(string: "https://buymeacoffee.com/pragith") {
-            NSWorkspace.shared.open(url)
-        }
     }
 
     // The following features are commented out to ensure App Store sandboxing compliance.

@@ -24,8 +24,6 @@ struct AboutView: View {
             
             VStack(spacing: 5) {
                 Text("Developed by Pragith Prakash")
-                Link("pragith.net", destination: URL(string: "https://pragith.net/apps/caffeinated")!)
-                    .font(.caption)
             }
             
             Text("© 2026 Pragith AI Inc.")
