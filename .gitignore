@@ -17,3 +17,7 @@ xcuserdata/
 # Release Artifacts
 release/
 *.dmg
+
+# Local agent configuration and incomplete screenshot captures
+.antigravitycli/
+docs/screenshots/..3_menu_open.png-DmvC
