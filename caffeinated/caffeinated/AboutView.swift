@@ -10,8 +10,9 @@ struct AboutView: View {
                     .frame(width: 80, height: 80)
                     .accessibilityLabel("Caffeinate-d app icon")
             } else {
-                Text("☕")
+                Image(systemName: "cup.and.saucer")
                     .font(.system(size: 60))
+                    .accessibilityLabel("Caffeinate-d app icon")
             }
             
             VStack(spacing: 5) {
