@@ -4,9 +4,10 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PROJECT="$ROOT_DIR/caffeinated/caffeinated.xcodeproj"
 VERSION="$(tr -d '[:space:]' < "$ROOT_DIR/VERSION")"
-BUILD_NUMBER="1"
-RELEASE_DIR="$ROOT_DIR/caffeinated/build/releases/$VERSION"
-ARCHIVE="$RELEASE_DIR/Caffeinate-d-$VERSION.xcarchive"
+BUILD_NUMBER="$(sed -n 's/^[[:space:]]*CURRENT_PROJECT_VERSION = \([0-9][0-9]*\);$/\1/p' "$PROJECT/project.pbxproj" | sort -u)"
+[[ "$BUILD_NUMBER" =~ ^[0-9]+$ ]] || { printf 'error: Xcode build numbers are missing or inconsistent\n' >&2; exit 1; }
+RELEASE_DIR="$ROOT_DIR/caffeinated/build/releases/$VERSION-$BUILD_NUMBER"
+ARCHIVE="$RELEASE_DIR/Caffeinate-d-$VERSION-$BUILD_NUMBER.xcarchive"
 EXPORT_DIR="$RELEASE_DIR/export"
 PACKAGE="$EXPORT_DIR/caffeinate-d.pkg"
 ACTION="${1:-}"
